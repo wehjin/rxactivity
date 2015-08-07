@@ -1,6 +1,6 @@
-package com.rubyhuntersky.rebalance.rx;
+package com.rubyhuntersky.rxactivity;
 
-import com.rubyhuntersky.rebalance.rx.lifter.MapLifter;
+import com.rubyhuntersky.rxactivity.lifter.MapLifter;
 
 import rx.Observable;
 import rx.Subscription;
@@ -65,20 +65,20 @@ public class ScopedObservable<S, T> {
             }
 
             @Override
-            public void onError(S scoope, Throwable throwable) {
+            public void onError(S scope, Throwable throwable) {
                 if (onError == null) {
                     return;
                 }
-                onError(scoope, throwable);
+                onError(scope, throwable);
             }
         });
     }
 
-    public interface OnSubscribe<A, T> extends Action1<ScopedSubscriber<A, T>> {
+    public interface OnSubscribe<S, T> extends Action1<ScopedSubscriber<S, T>> {
 
     }
 
-    public interface Lifter<A, U, T> extends Func1<ScopedSubscriber<A, U>, ScopedSubscriber<A, T>> {
+    public interface Lifter<S, U, T> extends Func1<ScopedSubscriber<S, U>, ScopedSubscriber<S, T>> {
 
     }
 

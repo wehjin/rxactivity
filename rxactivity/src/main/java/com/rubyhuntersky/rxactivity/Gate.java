@@ -1,4 +1,4 @@
-package com.rubyhuntersky.rebalance.rx;
+package com.rubyhuntersky.rxactivity;
 
 import rx.Observable;
 import rx.subjects.BehaviorSubject;

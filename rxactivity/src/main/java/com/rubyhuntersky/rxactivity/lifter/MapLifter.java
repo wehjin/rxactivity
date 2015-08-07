@@ -1,8 +1,8 @@
-package com.rubyhuntersky.rebalance.rx.lifter;
+package com.rubyhuntersky.rxactivity.lifter;
 
-import com.rubyhuntersky.rebalance.rx.ScopedObservable;
-import com.rubyhuntersky.rebalance.rx.ScopedObserver;
-import com.rubyhuntersky.rebalance.rx.ScopedSubscriber;
+import com.rubyhuntersky.rxactivity.ScopedObservable;
+import com.rubyhuntersky.rxactivity.ScopedObserver;
+import com.rubyhuntersky.rxactivity.ScopedSubscriber;
 
 import rx.functions.Func1;
 
@@ -22,8 +22,8 @@ public class MapLifter<A, U, T> implements ScopedObservable.Lifter<A, U, T> {
     public ScopedSubscriber<A, T> call(final ScopedSubscriber<A, U> lowerSubscriber) {
         return new ScopedSubscriber<>(new ScopedObserver<A, T>() {
             @Override
-            public void onNext(A activity, T value) {
-                lowerSubscriber.onNext(activity, mapper.call(value));
+            public void onNext(A scope, T value) {
+                lowerSubscriber.onNext(scope, mapper.call(value));
             }
 
             @Override
@@ -32,8 +32,8 @@ public class MapLifter<A, U, T> implements ScopedObservable.Lifter<A, U, T> {
             }
 
             @Override
-            public void onError(A activity, Throwable throwable) {
-                lowerSubscriber.onError(activity, throwable);
+            public void onError(A scope, Throwable throwable) {
+                lowerSubscriber.onError(scope, throwable);
             }
         });
     }

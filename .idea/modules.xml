@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Rebalance.iml" filepath="$PROJECT_DIR$/Rebalance.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rxactivity/rxactivity.iml" filepath="$PROJECT_DIR$/rxactivity/rxactivity.iml" />
     </modules>
   </component>
 </project>
