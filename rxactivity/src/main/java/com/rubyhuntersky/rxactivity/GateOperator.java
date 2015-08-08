@@ -27,6 +27,7 @@ public class GateOperator<T> implements Observable.Operator<T, T> {
             private StoreAndForward<T> storeAndForward;
             private Subscription gateSubscription;
             private boolean isEnded;
+            private boolean mainCompleted;
 
             @Override
             public void onStart() {
@@ -54,6 +55,9 @@ public class GateOperator<T> implements Observable.Operator<T, T> {
                     @Override
                     public void onNext(Boolean isOpen) {
                         storeAndForward.setGate(isOpen);
+                        if (isOpen && mainCompleted) {
+                            finishMainCompletion();
+                        }
                     }
 
                     private void stop() {
@@ -66,16 +70,18 @@ public class GateOperator<T> implements Observable.Operator<T, T> {
 
             @Override
             public void onCompleted() {
-                if (isEnded) {
+                if (isEnded || mainCompleted) {
                     return;
                 }
-                stop();
-                lowerSubscriber.onCompleted();
+                mainCompleted = true;
+                if (storeAndForward.isOpen()) {
+                    finishMainCompletion();
+                }
             }
 
             @Override
             public void onError(Throwable e) {
-                if (isEnded) {
+                if (isEnded || mainCompleted) {
                     return;
                 }
                 stop();
@@ -84,7 +90,15 @@ public class GateOperator<T> implements Observable.Operator<T, T> {
 
             @Override
             public void onNext(T t) {
+                if (isEnded || mainCompleted) {
+                    return;
+                }
                 storeAndForward.addValue(t);
+            }
+
+            private void finishMainCompletion() {
+                stop();
+                lowerSubscriber.onCompleted();
             }
 
             private void stop() {
@@ -92,6 +106,7 @@ public class GateOperator<T> implements Observable.Operator<T, T> {
                 gateSubscription.unsubscribe();
                 gateSubscription = null;
             }
+
         };
     }
 
@@ -105,26 +120,34 @@ public class GateOperator<T> implements Observable.Operator<T, T> {
             this.observer = observer;
         }
 
+        public boolean isOpen() {
+            return (isOpen != null && isOpen);
+        }
+
         public void setGate(boolean isOpen) {
             if (this.isOpen != null && this.isOpen == isOpen) {
                 return;
             }
             this.isOpen = isOpen;
             if (isOpen) {
-                final List<T> toForward = storedPayloads;
-                storedPayloads = new ArrayList<>();
-                for (T value : toForward) {
-                    observer.onNext(value);
-                }
+                forward();
             }
         }
 
         public void addValue(T value) {
-            if (isOpen == null || !isOpen) {
+            if (!isOpen()) {
                 storedPayloads.add(value);
                 return;
             }
             observer.onNext(value);
+        }
+
+        private void forward() {
+            final List<T> toForward = storedPayloads;
+            storedPayloads = new ArrayList<>();
+            for (T value : toForward) {
+                observer.onNext(value);
+            }
         }
     }
 }
