@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">rxactivity</string>
+    <string name="app_name">RxactivityTest</string>
+
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 </resources>

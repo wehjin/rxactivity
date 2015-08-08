@@ -130,8 +130,8 @@ public class ActivityScopeHelper<A extends Activity> {
     }
 
     @NonNull
-    public <T> Observable.Transformer<T, T> observeWhileResumed() {
-        return new GateTransformer<>(isResumedStream.get());
+    public <T> Observable.Operator<T, T> observeWhileResumed() {
+        return new GateOperator<>(isResumedStream.get());
     }
 
     private <T> Savable<T> restoreOrCreate(Bundle bundle, String bundleKey, Func0<T> onCreate) {

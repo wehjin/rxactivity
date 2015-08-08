@@ -5,8 +5,8 @@ android {
     buildToolsVersion "22.0.0"
 
     defaultConfig {
-        applicationId "com.rubyhuntersky.rebalance"
-        minSdkVersion 19
+        applicationId "com.rubyhuntersky.rxactivitytest"
+        minSdkVersion 10
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
@@ -22,7 +22,10 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.0.0'
+    compile project(':rxactivity')
     compile 'io.reactivex:rxjava:1.0.13'
     compile 'io.reactivex:rxandroid:1.0.0'
-    compile project(':rxactivity')
+    compile 'com.android.support:support-annotations:22.0.0'
+    testCompile 'junit:junit:4.12'
+    testCompile "org.robolectric:robolectric:3.0"
 }

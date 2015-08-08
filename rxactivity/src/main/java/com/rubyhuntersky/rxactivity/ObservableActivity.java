@@ -21,7 +21,7 @@ abstract public class ObservableActivity<A extends ObservableActivity> extends A
         return scopeHelper.observeWithActivity(observable);
     }
 
-    public <T> Observable.Transformer<T, T> observeWhileResumed() {
+    public <T> Observable.Operator<T, T> observeWhileResumed() {
         return scopeHelper.observeWhileResumed();
     }
 
