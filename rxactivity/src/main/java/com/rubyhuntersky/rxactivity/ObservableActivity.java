@@ -1,24 +1,40 @@
 package com.rubyhuntersky.rxactivity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+
 import rx.Observable;
 
 /**
  * @author wehjin
  * @since 8/5/15
  */
-public class ObservableActivity extends Activity {
+@SuppressWarnings("rawtypes")
+abstract public class ObservableActivity<A extends ObservableActivity> extends Activity {
 
-    private ActivityScopeHelper<ObservableActivity> scopeHelper = new ActivityScopeHelper<>(this);
+    @SuppressWarnings("unchecked")
+    private ActivityScopeHelper<A> scopeHelper = new ActivityScopeHelper<>((A) this);
 
-    public <A extends ObservableActivity, T> ScopedObservable<A, T> observeWithActivity(
-            final Observable<T> observable) {
+    public <T> ScopedObservable<A, T> observeWithActivity(final Observable<T> observable) {
         return scopeHelper.observeWithActivity(observable);
     }
 
     public <T> Observable.Transformer<T, T> observeWhileResumed() {
         return scopeHelper.observeWhileResumed();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        scopeHelper.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        scopeHelper.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -34,9 +50,9 @@ public class ObservableActivity extends Activity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        scopeHelper.onCreate(savedInstanceState);
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        scopeHelper.onSaveInstanceState(outState);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
